@@ -1,0 +1,9 @@
+bin\windows\zookeeper-server-start.bat config\zookeeper.properties
+bin\windows\kafka-server-start.bat config\server.properties
+
+
+mvn clean install -DskipTests
+mvn spring-boot:run
+
+
+kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic feedbacks

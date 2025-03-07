@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" type="x-icon" href="../static/images/movie logo.png">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        UBFlix
+    </title>
+    <!-- GOOGLE FONTS -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;700;900&display=swap" rel="stylesheet">
+    <!-- OWL CAROUSEL -->
+   
+    <!-- BOX ICONS -->
+    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- APP CSS -->
+    <link rel="stylesheet" href="../static/grid.css">
+    <link rel="stylesheet" href="../static/admin.css">
+</head>
+
+<body>
+
+    <!-- NAV -->
+    <div class="nav-wrapper">
+        <div class="container">
+            <div class="nav">
+                <a href="../auth/login.html" class="logo">
+                    <i class='bx bx-movie-play bx-tada main-color'></i>UB<span class="main-color">F</span>lix
+                </a>
+                <ul class="nav-menu" id="nav-menu">
+                    <li id="user-name-li" >
+                        <a href="../auth/login.html" id="user-name" >
+                            <!-- Username will be dynamically inserted here -->
+                            - <span id="username-span"></span> LOGOUT -
+                        </a>
+                    </li>
+                </ul>
+                <!-- MOBILE MENU TOGGLE -->
+                <div class="hamburger-menu" id="hamburger-menu">
+                    <div class="hamburger"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END NAV -->
+    
+    <!-- LATEST MOVIES SECTION -->
+    <div class="section">
+        <div class="container">
+            <div class="section-header">
+                <div class="title">
+                    Control Panel
+                </div>
+            </div>
+            </div>    
+            </div>
+        </div>
+    </div>
+    <!-- END LATEST MOVIES SECTION -->
+    <div class="container-cards"> 
+        <div class="parent-container-card">
+            <div  class="title">Dashboard Overview</div>
+            <div class="tab-conatiner">
+                <div class="tabs">
+                    <div class="tab-first active" onclick="switchTabOverview('overview-tab')">Statistics</div>
+                    <div class="tab-first" onclick="switchTabOverview('train-tab')">Train Model</div>
+                </div>
+    
+                <div id="overview-tab" class="tab-content-overview active">
+                    <div class="dashboard-cards">
+                        <div class="card" data-tooltip="Total number of registered users">
+                            <h2 id="card-name">Total Users</h2>
+                            <p id="total-users">0</p>
+                        </div>
+                        <div class="card" data-tooltip="Total number of movies in database">
+                            <h2 id="card-name">Total Movies</h2>
+                            <p id="total-movies">0</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="train-tab" class="tab-content-overview">
+                    <div class="dashboard-cards" style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 15px; max-width: 400px; margin: 0 auto;">
+                        <p>This will trigger the model training process. Once clicked, the model will begin training.</p>
+                        
+                        <label for="num-nodes">Number of Nodes:</label>
+                        <input type="number" id="num-nodes" min="0" value="0" style="width: 100px; text-align: center;">
+                        
+                        <button id="train-button" onclick="trainModel()">Train Model</button>
+                        <p style="font-size: 0.9em; color: #ffffff; max-width: 400px; text-align: center;">
+                            <strong>What is Number of Nodes?</strong><br>
+                            The number of nodes defines how many online <code>gen_service</code> nodes the new model version will be rolled out to.<br><br>
+                            - If set to <strong>0</strong>: The <code>train_service</code> will save the model weights to the database. No nodes will receive the updated model unless restarted.<br>
+                            - If set to <strong>1 or more</strong>: The <code>train_service</code> will wait for feedback from the specified number of nodes before finalizing the update.<br><br>
+                            
+                            <strong style="color: #ff5555;">⚠ WARNING: Do not specify a higher number of nodes than the actual existing ones!!!</strong><br>
+                            If the number is too high, the <code>train_service</code> might wait indefinitely for feedback, causing the process to hang.
+                        </p>
+                        
+                        <div id="train-status"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="parent-container-card">
+            <div  class="title">User Management</div>
+                <div class="suggestions-container">
+                    <div class="input-wrapper">
+                        <input type="text" id="director-input-1"class="director-input" autocomplete="off" placeholder="Search user by first name...">
+                        <div id="suggestions-1"></div>
+                      </div>
+                      <button id="save-button-1">Get Details</button>
+                </div>
+                <div class="dashboard-cards">
+                    <div id="user-details-1">
+                    </div>
+                </div>
+        </div>
+
+        <div class="parent-container-card">
+            <div  class="title">Movie Management</div>
+            <div class="tab-conatiner">
+                <div class="tabs">
+                    <div class="tab-second active" onclick="switchTab('input-tab')">Search Movie</div>
+                    <div class="tab-second" onclick="switchTab('text-tab')">Add Movie</div>
+                </div>
+    
+                <div id="input-tab" class="tab-content-movie active">
+                    <div class="suggestions-container">
+                        <div class="input-wrapper">
+                            <input type="text" class="director-input" id="director-input-2" autocomplete="off" placeholder="Search movie by title...">
+                            <div class="suggestions" id="suggestions-2"></div>
+                        </div>
+                        <button id="save-button-2">Get Details</button>
+                        
+                    </div>
+                    <div id="user-details-2" style="display: none;"></div>
+                </div>
+                
+                <div id="text-tab" class="tab-content-movie">
+
+                    <div class="dashboard-cards">
+                        <div id="add-movie-wrapper">
+                            <form id="movie-form">
+
+                                <!-- Step 1: Basic Movie Information -->
+                                <div class="form-step" id="step-1">
+                                    <h3>Step 1: Basic Movie Information</h3>
+                                    <label for="title">Title:</label>
+                                    <input type="text" id="title" name="title" required>
+                            
+                                    <label for="genres">Genres:</label>
+                                    <input type="text" id="genres" name="genres" required>
+                            
+                                    <button id="button-next" type="button" onclick="nextStep(2)">Next</button>
+                                </div>
+                            
+                                <!-- Step 2: External IDs -->
+                                <div class="form-step" id="step-2" style="display: none;">
+                                    <h3>Step 2: External IDs</h3>
+                                    <label for="imdbId">IMDb ID:</label>
+                                    <input type="text" id="imdbId" name="imdbId" required>
+                            
+                                    <label for="tmdbId">TMDb ID:</label>
+                                    <input type="text" id="tmdbId" name="tmdbId" required>
+                            
+                                    <button id="button-prev" type="button" onclick="prevStep(1)">Previous</button>
+                                    <button id="button-next" type="button" onclick="nextStep(3)">Next</button>
+                                </div>
+                            
+                                <!-- Step 3: Key Personnel -->
+                                <div class="form-step" id="step-3" style="display: none;">
+                                    <h3>Step 3: Key Personnel</h3>
+                                    <label for="mostPopularCast">Most Popular Cast:</label>
+                                    <input type="text" id="mostPopularCast" name="most_popular_cast" required>
+                            
+                                    <label for="director">Director:</label>
+                                    <input type="text" id="director" name="director" required>
+                            
+                                    <button id="button-prev" type="button" onclick="prevStep(2)">Previous</button>
+                                    <button id="button-next" type="button" onclick="nextStep(4)">Next</button>
+                                </div>
+                            
+                                <!-- Step 4: Additional Details -->
+                                <div class="form-step" id="step-4" style="display: none;">
+                                    <h3>Step 4: Additional Details</h3>
+                                    <label for="originalLanguage">Original Language:</label>
+                                    <input type="text" id="originalLanguage" name="original_language" required>
+                            
+                                    <label for="overview">Overview:</label>
+                                    <textarea id="overview" name="overview" required></textarea>
+                            
+                                    <button id="button-prev" type="button" onclick="prevStep(3)">Previous</button>
+                                    <button id="button-next" type="button" onclick="nextStep(5)">Next</button>
+                                </div>
+                            
+                                <!-- Step 5: Popularity & Ratings -->
+                                <div class="form-step" id="step-5" style="display: none;">
+                                    <h3>Step 5: Popularity & Ratings</h3>
+                                    <label for="popularity">Popularity:</label>
+                                    <input type="text" step="any" id="popularity" name="popularity" required>
+                            
+                                    <label for="voteAverage">Vote Average:</label>
+                                    <input type="text" step="any" id="voteAverage" name="vote_average" required>
+                            
+                                    <button id="button-prev" type="button" onclick="prevStep(4)">Previous</button>
+                                    <button id="button-next" type="button" onclick="nextStep(6)">Next</button>
+                                </div>
+                            
+                                <!-- Step 6: Release Information -->
+                                <div class="form-step" id="step-6" style="display: none;">
+                                    <h3>Step 6: Release Information</h3>
+                                    <label for="releaseDate">Release Date:</label>
+                                    <input type="date" id="releaseDate" name="release_date" required>
+                            
+                                    <label for="posterPath">Poster Path:</label>
+                                    <input type="text" id="posterPath" name="poster_path">
+                            
+                                    <button id="button-prev" type="button" onclick="prevStep(5)">Previous</button>
+                                    <button id="button-next" type="button" onclick="nextStep(7)">Next</button>
+                                </div>
+                            
+                                <!-- Step 7: Review & Submit -->
+                                <div class="form-step" id="step-7" style="display: none;">
+                                    <h3>Step 7: Review & Submit</h3>
+                                    <p>Ensure all details are correct before submitting.</p>
+                            
+                                    <button id="button-prev" type="button" onclick="prevStep(6)">Previous</button>
+                                    <button id="button-next" type="submit">Submit Movie</button>
+                                </div>
+                            
+                            </form>
+                            
+                            
+        
+        
+        
+                        </div>
+                        <div id="user-details-2" style="display: none;"></div>
+                    </div>
+
+                </div>
+            </div>
+            
+            
+
+        </div>
+
+        
+        
+        
+     </div>
+     
+
+    
+    <!-- FOOTER SECTION -->
+    <footer class="section">
+        <div class="container">
+            <div class="row">
+                <div class="col-4 col-md-6 col-sm-12">
+                    <div class="content">
+                        <a href="#" class="logo">
+                            <i class='bx bx-movie-play bx-tada main-color'></i>UB<span class="main-color">F</span>lix
+                        </a>
+                        <p>
+                            This website is part of AI Algorithms — Theory and Engineering project on building a Recommendation System. Powered by data-driven algorithms to enhance user experience.
+                        <div class="social-list">
+                            <a href="#" class="social-item">
+                                <i class="bx bxl-facebook"></i>
+                            </a>
+                            <a href="#" class="social-item">
+                                <i class="bx bxl-twitter"></i>
+                            </a>
+                            <a href="#" class="social-item">
+                                <i class="bx bxl-instagram"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-8 col-md-6 col-sm-12">
+                    <div class="row">
+                        <div class="col-3 col-md-6 col-sm-6">
+                            <div class="content">
+                                <p><b>UBFlix</b></p>
+                                <ul class="footer-menu">
+                                    <li><a href="#">About us</a></li>
+                                    <li><a href="#">My profile</a></li>
+                                    <li><a href="#">Pricing plans</a></li>
+                                    <li><a href="#">Contacts</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-3 col-md-6 col-sm-6">
+                            <div class="content">
+                                <p><b>Browse</b></p>
+                                <ul class="footer-menu">
+                                    <li><a href="#">About us</a></li>
+                                    <li><a href="#">My profile</a></li>
+                                    <li><a href="#">Pricing plans</a></li>
+                                    <li><a href="#">Contacts</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-3 col-md-6 col-sm-6">
+                            <div class="content">
+                                <p><b>Help</b></p>
+                                <ul class="footer-menu">
+                                    <li><a href="#">About us</a></li>
+                                    <li><a href="#">My profile</a></li>
+                                    <li><a href="#">Pricing plans</a></li>
+                                    <li><a href="#">Contacts</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- END FOOTER SECTION -->
+
+    <!-- COPYRIGHT SECTION -->
+    <div class="copyright">
+        Copyright 2025  
+    </div>
+    <!-- END COPYRIGHT SECTION -->
+
+    <!-- SCRIPT -->
+    <!-- JQUERY -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <!-- OWL CAROUSEL -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js" integrity="sha512-bPs7Ae6pVvhOSiIcyUClR7/q2OAsRiovw4vAkX+zJbw3ShAeeqezq50RIIcIURq7Oa20rW2n2q+fyXBNcU9lrw==" crossorigin="anonymous"></script>
+    <!-- APP SCRIPT -->
+    <script src="adminPage.js"></script>
+
+</body>
+
+</html>

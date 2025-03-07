@@ -1,0 +1,7 @@
+psycopg2-binary==2.9.10
+Flask==3.1.0
+Flask-Cors==3.0.10
+prometheus-client==0.21.1
+bcrypt==4.2.1
+pymongo==4.11.1
+waitress==3.0.2

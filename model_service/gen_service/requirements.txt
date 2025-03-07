@@ -1,0 +1,13 @@
+requests==2.32.3
+urllib3>=2.0.0
+Flask==3.1.0
+Flask-Cors==3.0.10
+prometheus-client==0.21.1
+pandas==2.2.3
+numpy==2.2.1
+SQLAlchemy==2.0.36
+redis==5.2.1
+faiss-cpu==1.10.0  
+pymongo==4.11.1
+psycopg2-binary==2.9.10
+waitress==3.0.2

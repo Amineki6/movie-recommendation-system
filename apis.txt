@@ -1,0 +1,19 @@
+analytics : http://127.0.0.1:3040
+auth : http://127.0.0.1:3300
+database : http://127.0.0.1:3303
+feedback : http://127.0.0.1:6090
+gen : http://127.0.0.1:6060
+store : http://127.0.0.1:6061
+fetch : http://127.0.0.1:6062
+train : http://127.0.0.1:7070
+ui_poster : http://127.0.0.1:3030
+ui_web : http://127.0.0.1:5500
+kafka: http://127.0.0.1:8080
+prometheus : http://127.0.0.1:9090
+grafana : http://127.0.0.1:3000
+
+
+
+curl -X POST http://localhost:7070/initialize
+
+

@@ -1,0 +1,61 @@
+# my global config
+global:
+  scrape_interval: 15s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
+  evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
+  # scrape_timeout is set to the global default (10s).
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          # - alertmanager:9093
+
+# Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
+rule_files:
+  # - "first_rules.yml"
+  # - "second_rules.yml"
+
+# A scrape configuration containing exactly one endpoint to scrape:
+# Here it's Prometheus itself.
+scrape_configs:
+  # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+  - job_name: "prometheus"
+
+    # metrics_path defaults to '/metrics'
+    # scheme defaults to 'http'.
+
+    static_configs:
+      - targets: ["prometheus:9090"]
+
+  - job_name: 'fetch_service'
+    static_configs:
+      - targets: ['fetch-service:6062']
+  
+  - job_name: 'gen_service'
+    static_configs:
+      - targets: ['gen-service:6060']
+
+  - job_name: 'store_service'
+    static_configs:
+      - targets: ['store-service:6061']
+
+  - job_name: 'database_service'
+    static_configs:
+      - targets: ['database-service:3303']
+
+  - job_name: 'analytics_service'
+    static_configs:
+      - targets: ['analytics-service:3040']
+  
+  - job_name: 'auth_service'
+    static_configs:
+      - targets: ['auth-service:3300']
+
+  - job_name: 'feedback_service'
+    static_configs:
+      - targets: ['feedback-service:6090']
+
+  - job_name: 'ui_service'
+    static_configs:
+      - targets: ['ui-service:3030']

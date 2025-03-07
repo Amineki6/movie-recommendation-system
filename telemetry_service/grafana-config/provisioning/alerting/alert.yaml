@@ -1,0 +1,93 @@
+apiVersion: 1
+groups:
+    - orgId: 1
+      name: freq
+      folder: model_satisfaction
+      interval: 1m
+      rules:
+        - uid: feex8e6hb241sc
+          title: Collaborative Model Threshold Alert
+          condition: E
+          data:
+            - refId: B
+              relativeTimeRange:
+                from: 900
+                to: 0
+              datasourceUid: prometheus-fixed-uid
+              model:
+                adhocFilters: []
+                datasource:
+                    type: prometheus
+                    uid: prometheus-fixed-uid
+                editorMode: code
+                expr: movie_rating_sum_02 / movie_rating_count_02
+                instant: false
+                interval: ""
+                intervalMs: 15000
+                legendFormat: Collaborative Model
+                maxDataPoints: 43200
+                range: true
+                refId: B
+            - refId: E
+              datasourceUid: __expr__
+              model:
+                conditions:
+                    - evaluator:
+                        params:
+                            - 2
+                        type: lt
+                      operator:
+                        type: and
+                      query:
+                        params:
+                            - E
+                      reducer:
+                        params: []
+                        type: last
+                      type: query
+                datasource:
+                    type: __expr__
+                    uid: __expr__
+                expression: A
+                intervalMs: 1000
+                maxDataPoints: 43200
+                refId: E
+                type: threshold
+            - refId: A
+              datasourceUid: __expr__
+              model:
+                conditions:
+                    - evaluator:
+                        params:
+                            - 0
+                            - 0
+                        type: gt
+                      operator:
+                        type: and
+                      query:
+                        params: []
+                      reducer:
+                        params: []
+                        type: avg
+                      type: query
+                datasource:
+                    name: Expression
+                    type: __expr__
+                    uid: __expr__
+                expression: B
+                intervalMs: 1000
+                maxDataPoints: 43200
+                reducer: last
+                refId: A
+                type: reduce
+          dashboardUid: aedu6rlzmj1fkb
+          panelId: 9
+          noDataState: NoData
+          execErrState: Error
+          for: 1m
+          annotations:
+            __dashboardUid__: aedu6rlzmj1fkb
+            __panelId__: "9"
+          isPaused: false
+          notification_settings:
+            receiver: train_cbf

@@ -1,0 +1,13 @@
+Flask==3.1.0
+Flask-Cors==3.0.10
+prometheus-client==0.21.1
+psycopg2-binary==2.9.10
+bcrypt==4.2.1
+pandas==2.2.3
+transformers==4.48.1
+joblib==1.4.2
+numpy==2.2.1
+redis==5.2.1
+pymongo==4.11.1
+scikit-learn==1.5.2
+waitress==3.0.2

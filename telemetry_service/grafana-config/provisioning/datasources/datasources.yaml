@@ -1,0 +1,21 @@
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090 
+    isDefault: true
+    editable: true
+    uid: prometheus-fixed-uid
+  
+  - name: PostgreSQL
+    type: postgres
+    access: proxy
+    url: postgresinstance.cpyqmeeock79.eu-north-1.rds.amazonaws.com:5432 
+    database: postgresdb 
+    user: postgres 
+    secureJsonData:
+      password: postgre123
+    isDefault: false  
+    editable: false

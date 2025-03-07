@@ -1,0 +1,390 @@
+version: '3'
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27017:27017"  
+    volumes:
+      - mongo_data:/data/db 
+    networks:
+      microservices_network_v2:
+        aliases:
+          - mongodb
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      microservices_network_v2:
+        aliases:
+          - redis
+  
+  php-apache:
+    build: 
+      context: ./web
+      dockerfile: Dockerfile
+    container_name: ubflix_php
+    restart: always
+    ports:
+      - "8081:80"
+    volumes:
+      - ./web/php:/var/www/html
+    environment:
+      - APACHE_RUN_USER=#1000
+      - APACHE_RUN_GROUP=#1000
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+    networks:
+      microservices_network_v2:
+        aliases:
+          - zookeeper
+
+  kafka:
+    container_name: kafka
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+    networks:
+      microservices_network_v2:
+        aliases:
+          - kafka
+
+  prometheus:
+    container_name: prometheus
+    build: ./telemetry_service/prometheus
+    volumes:
+      - ./telemetry_service/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    restart: always
+    networks:
+      - microservices_network_v2
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
+    volumes:
+      - ./telemetry_service/grafana-config/dashboards:/etc/grafana/dashboards
+      - ./telemetry_service/grafana-config/provisioning:/etc/grafana/provisioning
+    restart: unless-stopped
+    networks:
+      - microservices_network_v2
+  
+  nginx:
+    container_name: nginx
+    depends_on:
+      - fetch_service
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    image: nginx-auth-proxy
+    networks:
+      - microservices_network_v2
+    ports:
+      - "80:80"
+
+  analytics_service:
+    container_name: analytics-service
+    depends_on:
+      - mongodb
+      - redis
+    build:
+      context: ./analytics_service
+      dockerfile: Dockerfile
+    image: analytics_service:latest
+    networks:
+      - microservices_network_v2
+    ports:
+      - "3040:3040"
+    volumes:
+      - ./telemetry_service:/app/telemetry_service
+      - ./database_service/saved_models:/app/saved_models
+
+    environment:
+      - FLASK_APP=app.py
+      - PYTHONPATH=/app
+      - DB_HOST=postgresinstance.cpyqmeeock79.eu-north-1.rds.amazonaws.com 
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=postgre123
+      - DB_NAME=postgresdb
+      - DB_URI=mongodb://mongodb:27017/ubflix
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - MODELS_PATH=/app/saved_models/pca_model_thousand.pkl
+
+  auth_service:
+    container_name: auth-service
+    depends_on:
+      - mongodb
+    build:
+      context: ./auth_service
+      dockerfile: Dockerfile
+    image: auth_service:latest
+    networks:
+      - microservices_network_v2
+    ports:
+      - "3300:3300"
+    volumes:
+      - ./telemetry_service:/app/telemetry_service
+    environment:
+      - FLASK_APP=app.py
+      - PYTHONPATH=/app
+      - DB_HOST=postgresinstance.cpyqmeeock79.eu-north-1.rds.amazonaws.com 
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=postgre123
+      - DB_NAME=postgresdb
+      - DB_URI=mongodb://mongodb:27017/ubflix
+
+  database_service:
+    container_name: database-service
+    depends_on:
+      - mongodb
+      - redis
+    build:
+      context: ./database_service
+      dockerfile: Dockerfile
+    image: database_service:latest
+    networks:
+      - microservices_network_v2
+    ports:
+      - "3303:3303"
+    volumes:
+      - ./telemetry_service:/app/telemetry_service
+      - ./database_service/saved_models:/app/saved_models
+
+    environment:
+      - FLASK_APP=app.py
+      - PYTHONPATH=/app
+      - DB_HOST=postgresinstance.cpyqmeeock79.eu-north-1.rds.amazonaws.com 
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=postgre123
+      - DB_NAME=postgresdb
+      - DB_URI=mongodb://mongodb:27017/ubflix
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+  feedback_service:
+    container_name: feedback-service
+    depends_on:
+      - mongodb
+      - redis
+    build:
+      context: ./feedback_service
+      dockerfile: Dockerfile
+    image: feedback_service:latest
+    networks:
+      - microservices_network_v2
+    ports:
+      - "6090:6090"
+    volumes:
+      - ./telemetry_service:/app/telemetry_service
+    environment:
+      - FLASK_APP=app.py
+      - PYTHONPATH=/app
+      - DB_HOST=postgresinstance.cpyqmeeock79.eu-north-1.rds.amazonaws.com 
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=postgre123
+      - DB_NAME=postgresdb
+      - DB_URI=mongodb://mongodb:27017/ubflix
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+
+  kafka_service:
+    container_name: kafka-service
+    build:
+      context: ./kafka_service
+      dockerfile: Dockerfile
+    depends_on:
+      - kafka
+    ports:
+      - "8080:8080"
+    environment:
+      - SERVER_ADDRESS=0.0.0.0
+      - SERVER_PORT=8080
+      - SPRING_PROFILES_ACTIVE=docker
+      - KAFKA_BROKER=kafka:9092
+      - JAVA_OPTS=-Djava.net.preferIPv4Stack=true
+      
+    networks:
+      - microservices_network_v2
+    
+
+  fetch_service:
+    container_name: fetch-service
+    depends_on:
+      - mongodb
+      - redis
+    build:
+      context: ./model_service/fetch_service
+      dockerfile: Dockerfile
+    image: fetch_service:latest
+    networks:
+      - microservices_network_v2
+    ports:
+      - "6062:6062"
+    volumes:
+      - ./telemetry_service:/app/telemetry_service
+
+    environment:
+      - FLASK_APP=app.py
+      - PYTHONPATH=/app
+      - DB_HOST=postgresinstance.cpyqmeeock79.eu-north-1.rds.amazonaws.com 
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=postgre123
+      - DB_NAME=postgresdb
+      - DB_URI=mongodb://mongodb:27017/ubflix
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    
+  gen_service:
+    container_name: gen-service
+    depends_on:
+      - mongodb
+      - redis
+    build:
+      context: ./model_service/gen_service
+      dockerfile: Dockerfile
+    image: gen_service:latest
+    networks:
+      - microservices_network_v2
+    ports:
+      - "6060:6060"
+    volumes:
+      - ./telemetry_service:/app/telemetry_service
+
+    environment:
+      - FLASK_APP=app.py
+      - PYTHONPATH=/app
+      - DB_HOST=postgresinstance.cpyqmeeock79.eu-north-1.rds.amazonaws.com 
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=postgre123
+      - DB_NAME=postgresdb
+      - DB_URI=mongodb://mongodb:27017/ubflix
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+
+  store_service:
+    container_name: store-service
+    depends_on:
+      - mongodb
+      - redis
+    build:
+      context: ./model_service/store_service
+      dockerfile: Dockerfile
+    image: store_service:latest
+    networks:
+      - microservices_network_v2
+    ports:
+      - "6061:6061"
+    volumes:
+      - ./telemetry_service:/app/telemetry_service
+
+    environment:
+      - FLASK_APP=app.py
+      - PYTHONPATH=/app
+      - DB_HOST=postgresinstance.cpyqmeeock79.eu-north-1.rds.amazonaws.com 
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=postgre123
+      - DB_NAME=postgresdb
+      - DB_URI=mongodb://mongodb:27017/ubflix
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+  train_service:
+    container_name: train-service
+    depends_on:
+      - mongodb
+      - redis
+    build:
+      context: ./model_service/train_service
+      dockerfile: Dockerfile
+    image: train_service:latest
+    networks:
+      - microservices_network_v2
+    ports:
+      - "7070:7070"
+    volumes:
+      - ./telemetry_service:/app/telemetry_service
+    environment:
+      - FLASK_APP=app.py
+      - PYTHONPATH=/app
+      - DB_HOST=postgresinstance.cpyqmeeock79.eu-north-1.rds.amazonaws.com 
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=postgre123
+      - DB_NAME=postgresdb
+      - DB_URI=mongodb://mongodb:27017/ubflix
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    
+  ui_service:
+    container_name: ui-service
+    depends_on:
+      - mongodb
+      - redis
+    build:
+      context: ./ui_service
+      dockerfile: Dockerfile
+    image: ui_service:latest
+    networks:
+      - microservices_network_v2
+    ports:
+      - "3030:3030"
+    volumes:
+      - ./telemetry_service:/app/telemetry_service
+    environment:
+      - FLASK_APP=app.py
+      - PYTHONPATH=/app
+      - DB_HOST=postgresinstance.cpyqmeeock79.eu-north-1.rds.amazonaws.com 
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=postgre123
+      - DB_NAME=postgresdb
+      - DB_URI=mongodb://mongodb:27017/ubflix
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+
+
+networks:
+  microservices_network_v2:
+    driver: bridge
+
+volumes:
+  mongo_data:
+  redis_data:

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" type="x-icon" href="../static/images/movie logo.png">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        UBFlix
+    </title>
+    <!-- GOOGLE FONTS -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;700;900&display=swap" rel="stylesheet">
+    <!-- OWL CAROUSEL -->
+   
+    <!-- BOX ICONS -->
+    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+    <!-- APP CSS -->
+    <link rel="stylesheet" href="../static/grid.css">
+    <link rel="stylesheet" href="../static/guide.css">
+</head>
+
+<body>
+
+    <!-- NAV -->
+    <div class="nav-wrapper">
+        <div class="container">
+            <div class="nav">
+                <a href="../main/index.html" class="logo">
+                    <i class='bx bx-movie-play bx-tada main-color'></i>UB<span class="main-color">F</span>lix
+                </a>
+                <ul class="nav-menu" id="nav-menu">
+                    <li><a href="#">Guide</a></li>
+                    <li id="user-name-li" >
+                        <a href="../auth/login.html" id="user-name" >
+                            <!-- Username will be dynamically inserted here -->
+                            - <span id="username-span"></span> LOGOUT -
+                        </a>
+                    </li>
+                </ul>
+                <!-- MOBILE MENU TOGGLE -->
+                <div class="hamburger-menu" id="hamburger-menu">
+                    <div class="hamburger"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END NAV -->
+    
+    <!-- LATEST MOVIES SECTION -->
+    <div class="section">
+        <div class="container">
+            <div class="section-header">
+                <div class="title">
+                    Our Models
+                </div>
+            </div>
+            </div>    
+            </div>
+        </div>
+    </div>
+    <!-- END LATEST MOVIES SECTION -->
+     <div class="description-models">
+        <div class="paragraph">
+            UBFlix is your go-to platform for discovering movies tailored to your tastes. Powered by a hybrid recommendation system, UBFlix leverages both content-based filtering and collaborative filtering to provide highly relevant suggestions. You can switch between two distinct recommendation modes:
+        </div>
+        <div class="title-paragraph">
+            FOR YOU - Personalized Content-Based Recommendations
+        </div>
+        <div class="paragraph">
+            This mode is designed to cater specifically to your unique movie preferences. By analyzing the genres, directors, actors, and themes of the movies you've watched and rated highly, UBFLIX curates a list of films that align with your taste. If you enjoy sci-fi thrillers or heartfelt dramas, the system ensures that your recommendations stay within your preferred spectrum.
+        </div>
+
+        <div class="title-paragraph">
+            PEERS' PICKS - What Others Like You Enjoy
+        </div>
+        <div class="paragraph">
+            This mode taps into the power of collaborative filtering, leveraging user data to suggest movies enjoyed by people with similar tastes. Instead of relying solely on content features, UBFLIX analyzes viewing patterns, ratings, and user behavior to bring you films that people like you have loved.
+        </div>
+     </div>
+    
+     
+    
+
+    <!-- FOOTER SECTION -->
+    <footer class="section">
+        <div class="container">
+            <div class="row">
+                <div class="col-4 col-md-6 col-sm-12">
+                    <div class="content">
+                        <a href="#" class="logo">
+                            <i class='bx bx-movie-play bx-tada main-color'></i>UB<span class="main-color">F</span>lix
+                        </a>
+                        <p>
+                            This website is part of AI Algorithms — Theory and Engineering project on building a Recommendation System. Powered by data-driven algorithms to enhance user experience.
+                        <div class="social-list">
+                            <a href="#" class="social-item">
+                                <i class="bx bxl-facebook"></i>
+                            </a>
+                            <a href="#" class="social-item">
+                                <i class="bx bxl-twitter"></i>
+                            </a>
+                            <a href="#" class="social-item">
+                                <i class="bx bxl-instagram"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-8 col-md-6 col-sm-12">
+                    <div class="row">
+                        <div class="col-3 col-md-6 col-sm-6">
+                            <div class="content">
+                                <p><b>UBFlix</b></p>
+                                <ul class="footer-menu">
+                                    <li><a href="#">About us</a></li>
+                                    <li><a href="#">My profile</a></li>
+                                    <li><a href="#">Pricing plans</a></li>
+                                    <li><a href="#">Contacts</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-3 col-md-6 col-sm-6">
+                            <div class="content">
+                                <p><b>Browse</b></p>
+                                <ul class="footer-menu">
+                                    <li><a href="#">About us</a></li>
+                                    <li><a href="#">My profile</a></li>
+                                    <li><a href="#">Pricing plans</a></li>
+                                    <li><a href="#">Contacts</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-3 col-md-6 col-sm-6">
+                            <div class="content">
+                                <p><b>Help</b></p>
+                                <ul class="footer-menu">
+                                    <li><a href="#">About us</a></li>
+                                    <li><a href="#">My profile</a></li>
+                                    <li><a href="#">Pricing plans</a></li>
+                                    <li><a href="#">Contacts</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- END FOOTER SECTION -->
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            if (!sessionStorage.getItem('userId')) {
+                window.location.replace('../auth/login.html');
+            }
+        });
+    </script>
+    <!-- COPYRIGHT SECTION -->
+    <div class="copyright">
+        Copyright 2025  
+    </div>
+    <!-- END COPYRIGHT SECTION -->
+
+    <!-- SCRIPT -->
+    <!-- JQUERY -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <!-- OWL CAROUSEL -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js" integrity="sha512-bPs7Ae6pVvhOSiIcyUClR7/q2OAsRiovw4vAkX+zJbw3ShAeeqezq50RIIcIURq7Oa20rW2n2q+fyXBNcU9lrw==" crossorigin="anonymous"></script>
+    <!-- APP SCRIPT -->
+    <script src="guide.js"></script>
+
+</body>
+
+</html>

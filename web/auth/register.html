@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" type="image/x-icon" href="static/images/movie-logo.png">
+    <title>UBFlix</title>
+    
+    <!-- GOOGLE FONTS -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;700;900&display=swap" rel="stylesheet">
+    
+    <!-- BOX ICONS -->
+    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+    
+    <!-- APP CSS -->
+    <link rel="stylesheet" href="../static/grid.css">
+    <link rel="stylesheet" href="../static/login.css">
+</head>
+
+<body>
+
+    <!-- NAVIGATION -->
+    <div class="nav-wrapper">
+        <div class="container">
+            <div class="nav">
+                <a href="#" class="logo">
+                    <i class='bx bx-movie-play bx-tada main-color'></i>UB<span class="main-color">F</span>lix
+                </a>
+                <!-- MOBILE MENU TOGGLE -->
+                <div class="hamburger-menu" id="hamburger-menu">
+                    <div class="hamburger"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- LOGIN SECTION -->
+    <div class="login-section">
+        <div class="container">
+            <div class="login-wrapper">
+                <div class="login-form">
+                    <h2 class="login-title">Register</h2>
+                    <form id="register-form">
+                        <div class="input-field">
+                            <label for="firstname">First Name</label>
+                            <input type="text" id="firstname" name="firstname" required placeholder="Enter your first name">
+                        </div>
+                        <div class="input-field">
+                            <label for="lastname">Last Name</label>
+                            <input type="text" id="lastname" name="lastname" required placeholder="Enter your last name">
+                        </div>
+                        <div class="input-field">
+                            <label for="Email">Email</label>
+                            <input type="text" id="Email" name="Email" required placeholder="Enter your first email">
+                        </div>
+                        <div class="input-field">
+                            <label for="password">Password</label>
+                            <input type="password" id="password-1" name="password" required placeholder="Enter your password">
+                        </div>
+                        <div class="input-field">
+                            <label for="password">Re-Type Password</label>
+                            <input type="password" id="password-2" name="password" required placeholder="Enter your password">
+                        </div>
+                        
+                        <div>
+                            <button  class="btn btn-hover" id="register-btn">
+                                <span>Register</span>
+                            </button>
+                        </div>
+                    </form>
+                    <div >
+                        <button onclick="redirectToLogin()" type="submit" class="btn btn-hover">
+                            <span>Already have an account?</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END LOGIN SECTION -->
+    <script src="register.js"></script>
+</body>
+
+</html>
