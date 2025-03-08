@@ -2,7 +2,7 @@
 
 This project is a **microservices-based movie recommendation system** that is fully dockerized using **Docker Compose**. For a comprehensive understanding of the system's architecture, implementation, and evaluation, please refer to:
 
-- **[Movie Recommendation System - Documentation]([https://gitlab.informatik.uni-bremen.de/mkina/aia_e_assignments/-/blob/mkina-b47ce9ca-patch-6f38/Assignment%206/Movie_Recommendation_System_-_Documentation.pdf?ref_type=heads](https://github.com/Amineki6/movie-recommendation-system/blob/main/Movie%20Recommendation%20System%20-%20Documentation.pdf))**: Detailed documentation of the codebase, microservices, evaluation, and user experience.
+- **[Movie Recommendation System - Documentation](https://github.com/Amineki6/movie-recommendation-system/blob/main/Movie%20Recommendation%20System%20-%20Documentation.pdf)**: Detailed documentation of the codebase, microservices, evaluation, and user experience.
 
 ---
 
