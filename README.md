@@ -71,7 +71,7 @@ docker-compose.yml
 
 ```sh
 git clone https://gitlab.informatik.uni-bremen.de/mkina/aia_e_assignments.git
-cd "aia_e_assignments/Assignment 6/movie_recommendation_system"
+cd movie_recommendation_system
 ```
 
 ### **2. Build the Kafka Service**
