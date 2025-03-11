@@ -70,7 +70,7 @@ docker-compose.yml
 ### **1. Clone the Repository**
 
 ```sh
-git clone https://gitlab.informatik.uni-bremen.de/mkina/aia_e_assignments.git
+git clone https://github.com/Amineki6/movie-recommendation-system.git
 cd movie_recommendation_system
 ```
 
